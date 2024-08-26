@@ -114,6 +114,19 @@ public:
         return pose_;
     }
 
+    Swarm::Odometry copy() const {
+        Pose pose = pose_.copy();
+        Vector3d vel = velocity;
+        Vector3d ang_vel = angular_velocity;
+        return Odometry(stamp, pose_, vel, ang_vel);
+    }
+
+    void rotate(double angle, Vector3d axis) {
+        pose_.rotate(angle, axis);
+        velocity = AngleAxisd(angle, axis) * velocity;
+        angular_velocity = AngleAxisd(angle, axis) * angular_velocity;
+    }
+
     void moveByPose(const Pose & delta_pose) {
         pose_ = delta_pose * pose_;
         velocity = delta_pose.att() * velocity;

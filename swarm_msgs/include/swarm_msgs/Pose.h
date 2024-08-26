@@ -126,6 +126,20 @@ class Pose {
 
 public:
 
+    Pose copy() const {
+        Vector3d pos = position;
+        Quaterniond att = attitude;
+        return Pose(pos, att);
+    }
+
+    void rotate(double angle, Vector3d axis) {
+        // attitude = AngleAxisd(angle, axis) * attitude;
+        // rotate at local frame
+        attitude = attitude * AngleAxisd(angle, axis);
+        attitude.normalize();
+        update_yaw();
+    }
+
     void update_yaw() {
         _yaw = wrap_angle(this->rpy().z());
         attitude_yaw_only = (Quaterniond)AngleAxisd(_yaw, Vector3d::UnitZ());
