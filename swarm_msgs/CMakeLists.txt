@@ -39,6 +39,7 @@ add_message_files(
         ImageArrayDescriptor.msg
         DPGOData.msg
         DPGOSignal.msg
+        SystemStatus.msg
 )
 
 ## Generate added messages and services with any dependencies listed here
