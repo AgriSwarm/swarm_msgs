@@ -133,6 +133,10 @@ public:
         angular_velocity = delta_pose.att() * angular_velocity;
     }
 
+    void addTransByPose(const Pose & delta_pose) {
+        pose_ = pose_ * delta_pose;
+    }
+
     friend Odometry operator*(Pose a, Odometry odom) {
         Odometry ret;
         ret.stamp = odom.stamp;
