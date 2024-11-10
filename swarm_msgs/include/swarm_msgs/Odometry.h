@@ -2,6 +2,8 @@
 #include <swarm_msgs/Pose.h>
 #include <nav_msgs/Odometry.h>
 #include <tf/transform_broadcaster.h>
+#include "lcm_gen/Odometry_t.hpp"
+#include <swarm_msgs/swarm_lcm_converter.hpp>
 
 namespace Swarm {
 class Odometry {
@@ -42,6 +44,13 @@ public:
         stamp(0.), pose_(_pose), velocity(vel), angular_velocity(0., 0., 0.)
     {}
 
+    Odometry(const Odometry_t & odom):
+        stamp(toROSTime(odom.stamp).toSec()),
+        pose_(odom.pose),
+        velocity(odom.velocity[0], odom.velocity[1], odom.velocity[2]),
+        angular_velocity(odom.angular_velocity[0], odom.angular_velocity[1], odom.angular_velocity[2])
+    {}
+
     std::string toStr() const {
         char buf[256] = {0};
         sprintf(buf, "Pose %s Vel %.2f %.2f %.2f", pose_.toStr().c_str(), velocity.x(), velocity.y(), velocity.z());
@@ -68,6 +77,20 @@ public:
         tf.setOrigin(tf::Vector3(pos().x(), pos().y(), pos().z()));
         tf.setRotation(tf::Quaternion(att().x(), att().y(), att().z(), att().w()));
         return tf;
+    }
+
+    Odometry_t toLCM() const {
+        Odometry_t odom;
+        ros::Time t(stamp);
+        odom.stamp = toLCMTime(t);
+        odom.pose = pose_.toLCM();
+        odom.velocity[0] = velocity.x();
+        odom.velocity[1] = velocity.y();
+        odom.velocity[2] = velocity.z();
+        odom.angular_velocity[0] = angular_velocity.x();
+        odom.angular_velocity[1] = angular_velocity.y();
+        odom.angular_velocity[2] = angular_velocity.z();
+        return odom;
     }
 
     Quaterniond & att() {
@@ -118,7 +141,7 @@ public:
         Pose pose = pose_.copy();
         Vector3d vel = velocity;
         Vector3d ang_vel = angular_velocity;
-        return Odometry(stamp, pose_, vel, ang_vel);
+        return Odometry(stamp, pose, vel, ang_vel);
     }
 
     void rotate(double angle, Vector3d axis) {

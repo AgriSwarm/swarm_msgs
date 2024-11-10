@@ -1,0 +1,7 @@
+struct IndexedOdometry_t
+{
+    Time_t  stamp;
+    int32_t  frame_id;
+    int32_t  drone_id;
+    Odometry_t odom;
+}

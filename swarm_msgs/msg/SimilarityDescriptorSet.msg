@@ -1,0 +1,4 @@
+Header header
+ImageArrayDescriptor img_desc_a
+ImageArrayDescriptor[] img_desc_set
+float32[] similarity_scores

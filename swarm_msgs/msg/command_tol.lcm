@@ -1,0 +1,9 @@
+struct CommandTOL_t
+{
+    int32_t drone_id;
+    float   min_pitch;
+    float   yaw;
+    float   latitude;
+    float   longitude;
+    float   altitude;
+}

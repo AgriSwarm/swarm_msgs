@@ -20,6 +20,7 @@ find_package(catkin REQUIRED COMPONENTS
 ## Generate messages in the 'msg' folder
 add_message_files(
         FILES
+        IndexedOdometry.msg
         swarm_fused.msg
         swarm_fused_relative.msg
         swarm_remote_command.msg
@@ -40,6 +41,11 @@ add_message_files(
         DPGOData.msg
         DPGOSignal.msg
         SystemStatus.msg
+        SimilarityDescriptorSet.msg
+        CommandTOL.msg
+        IndexedOdometry.msg
+        PositionCommand.msg
+        GoalSet.msg
 )
 
 ## Generate added messages and services with any dependencies listed here

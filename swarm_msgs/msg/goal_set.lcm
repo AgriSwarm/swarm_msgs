@@ -1,0 +1,5 @@
+struct GoalSet_t
+{
+    int16_t drone_id;
+    float   goal[3];
+}

@@ -1,0 +1,8 @@
+struct Odometry_t
+{
+    Time_t stamp;
+    string frame_id;
+    Pose_t pose;
+    float velocity[3];
+    float angular_velocity[3];
+}
