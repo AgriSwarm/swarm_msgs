@@ -1,0 +1,7 @@
+struct SystemStatus_t
+{
+    int32_t drone_id;
+    int32_t infra_status;
+    string nav_status;
+    string ap_status;
+}
