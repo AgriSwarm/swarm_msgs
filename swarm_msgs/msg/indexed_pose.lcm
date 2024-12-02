@@ -1,0 +1,6 @@
+struct IndexedPose_t
+{
+    Time_t  stamp;
+    int32_t  drone_id;
+    Pose_t pose;
+}

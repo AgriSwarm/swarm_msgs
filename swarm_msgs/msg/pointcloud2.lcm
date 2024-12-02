@@ -1,0 +1,26 @@
+struct PointField_t {
+    string name;
+    int32_t offset;
+    int8_t datatype;
+    int32_t count;
+}
+
+struct PointCloud2_t
+{
+    Time_t  stamp;
+
+    int32_t  drone_id;
+    int32_t  height;
+    int32_t  width;
+
+    int32_t field_num;
+    PointField_t fields[field_num];
+
+    boolean is_bigendian;
+    boolean is_dense;
+
+    int32_t point_step;
+    int32_t row_step;
+    int32_t point_num;
+    int8_t data[point_num];
+}

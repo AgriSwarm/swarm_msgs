@@ -1,0 +1,22 @@
+struct MINCOTraj_t
+{
+    Time_t  start_time;
+
+    int16_t  drone_id;
+    int32_t  traj_id;
+    float    des_clearance;
+
+    int8_t   order;
+    int8_t   piece_num;
+
+    float    start_p[3];
+    float    start_v[3];
+    float    start_a[3];
+    float    end_p[3];
+    float    end_v[3];
+    float    end_a[3];
+    float    inner_x[piece_num];
+    float    inner_y[piece_num];
+    float    inner_z[piece_num];
+    float    duration[piece_num];
+}

@@ -1,0 +1,32 @@
+struct PolynomialTrajectory_t
+{
+    Time_t  stamp;
+
+    int32_t  drone_id;
+    int32_t  trajectory_id;
+
+    // action commands
+    const int32_t ACTION_ADD = 1;
+    const int32_t ACTION_ABORT = 2;
+    const int32_t ACTION_WARN_START = 3;
+    const int32_t ACTION_WARN_FINAL = 4;
+    const int32_t ACTION_WARN_IMPOSSIBLE = 5;
+    int32_t  action;
+
+    // trajectory parameters
+    int32_t  num_order;
+    int32_t  num_segment;
+    int32_t  num_coef;
+
+    // trajectory coefficients
+    double   start_yaw;
+    double   final_yaw;
+    double   coef_x[num_coef];
+    double   coef_y[num_coef];
+    double   coef_z[num_coef];
+    double   time[num_segment];
+    double   mag_coeff;
+    int32_t  order[num_segment];
+
+    string   debug_info;
+}
