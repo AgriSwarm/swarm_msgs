@@ -9,6 +9,7 @@
 
 #include <lcm/lcm_coretypes.h>
 
+#include <string>
 #include <vector>
 #include "Time_t.hpp"
 #include "PointField_t.hpp"
@@ -18,6 +19,8 @@ class PointCloud2_t
 {
     public:
         Time_t     stamp;
+
+        std::string frame_id;
 
         int32_t    drone_id;
 
@@ -140,6 +143,11 @@ int PointCloud2_t::_encodeNoHash(void *buf, int offset, int maxlen) const
     tlen = this->stamp._encodeNoHash(buf, offset + pos, maxlen - pos);
     if(tlen < 0) return tlen; else pos += tlen;
 
+    char* frame_id_cstr = const_cast<char*>(this->frame_id.c_str());
+    tlen = __string_encode_array(
+        buf, offset + pos, maxlen - pos, &frame_id_cstr, 1);
+    if(tlen < 0) return tlen; else pos += tlen;
+
     tlen = __int32_t_encode_array(buf, offset + pos, maxlen - pos, &this->drone_id, 1);
     if(tlen < 0) return tlen; else pos += tlen;
 
@@ -186,6 +194,15 @@ int PointCloud2_t::_decodeNoHash(const void *buf, int offset, int maxlen)
 
     tlen = this->stamp._decodeNoHash(buf, offset + pos, maxlen - pos);
     if(tlen < 0) return tlen; else pos += tlen;
+
+    int32_t __frame_id_len__;
+    tlen = __int32_t_decode_array(
+        buf, offset + pos, maxlen - pos, &__frame_id_len__, 1);
+    if(tlen < 0) return tlen; else pos += tlen;
+    if(__frame_id_len__ > maxlen - pos) return -1;
+    this->frame_id.assign(
+        static_cast<const char*>(buf) + offset + pos, __frame_id_len__ - 1);
+    pos += __frame_id_len__;
 
     tlen = __int32_t_decode_array(buf, offset + pos, maxlen - pos, &this->drone_id, 1);
     if(tlen < 0) return tlen; else pos += tlen;
@@ -237,6 +254,7 @@ int PointCloud2_t::_getEncodedSizeNoHash() const
 {
     int enc_size = 0;
     enc_size += this->stamp._getEncodedSizeNoHash();
+    enc_size += this->frame_id.size() + 4 + 1;
     enc_size += __int32_t_encoded_array_size(NULL, 1);
     enc_size += __int32_t_encoded_array_size(NULL, 1);
     enc_size += __int32_t_encoded_array_size(NULL, 1);
@@ -261,7 +279,7 @@ uint64_t PointCloud2_t::_computeHash(const __lcm_hash_ptr *p)
             return 0;
     const __lcm_hash_ptr cp = { p, PointCloud2_t::getHash };
 
-    uint64_t hash = 0x40a51857b5e34b56LL +
+    uint64_t hash = 0x12d08d3d4f359807LL +
          Time_t::_computeHash(&cp) +
          PointField_t::_computeHash(&cp);
 

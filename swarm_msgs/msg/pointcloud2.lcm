@@ -8,6 +8,7 @@ struct PointField_t {
 struct PointCloud2_t
 {
     Time_t  stamp;
+    string frame_id;
 
     int32_t  drone_id;
     int32_t  height;

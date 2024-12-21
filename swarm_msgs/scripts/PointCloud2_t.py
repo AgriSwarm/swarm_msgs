@@ -14,14 +14,15 @@ import PointField_t
 import Time_t
 
 class PointCloud2_t(object):
-    __slots__ = ["stamp", "drone_id", "height", "width", "field_num", "fields", "is_bigendian", "is_dense", "point_step", "row_step", "point_num", "data"]
+    __slots__ = ["stamp", "frame_id", "drone_id", "height", "width", "field_num", "fields", "is_bigendian", "is_dense", "point_step", "row_step", "point_num", "data"]
 
-    __typenames__ = ["Time_t", "int32_t", "int32_t", "int32_t", "int32_t", "PointField_t", "boolean", "boolean", "int32_t", "int32_t", "int32_t", "int8_t"]
+    __typenames__ = ["Time_t", "string", "int32_t", "int32_t", "int32_t", "int32_t", "PointField_t", "boolean", "boolean", "int32_t", "int32_t", "int32_t", "int8_t"]
 
-    __dimensions__ = [None, None, None, None, None, ["field_num"], None, None, None, None, None, ["point_num"]]
+    __dimensions__ = [None, None, None, None, None, None, ["field_num"], None, None, None, None, None, ["point_num"]]
 
     def __init__(self):
         self.stamp = Time_t()
+        self.frame_id = ""
         self.drone_id = 0
         self.height = 0
         self.width = 0
@@ -43,6 +44,10 @@ class PointCloud2_t(object):
     def _encode_one(self, buf):
         assert self.stamp._get_packed_fingerprint() == Time_t._get_packed_fingerprint()
         self.stamp._encode_one(buf)
+        __frame_id_encoded = self.frame_id.encode('utf-8')
+        buf.write(struct.pack('>I', len(__frame_id_encoded)+1))
+        buf.write(__frame_id_encoded)
+        buf.write(b"\0")
         buf.write(struct.pack(">iiii", self.drone_id, self.height, self.width, self.field_num))
         for i0 in range(self.field_num):
             assert self.fields[i0]._get_packed_fingerprint() == PointField_t._get_packed_fingerprint()
@@ -63,6 +68,8 @@ class PointCloud2_t(object):
     def _decode_one(buf):
         self = PointCloud2_t()
         self.stamp = Time_t._decode_one(buf)
+        __frame_id_len = struct.unpack('>I', buf.read(4))[0]
+        self.frame_id = buf.read(__frame_id_len)[:-1].decode('utf-8', 'replace')
         self.drone_id, self.height, self.width, self.field_num = struct.unpack(">iiii", buf.read(16))
         self.fields = []
         for i0 in range(self.field_num):
@@ -78,7 +85,7 @@ class PointCloud2_t(object):
     def _get_hash_recursive(parents):
         if PointCloud2_t in parents: return 0
         newparents = parents + [PointCloud2_t]
-        tmphash = (0x40a51857b5e34b56+ Time_t._get_hash_recursive(newparents)+ PointField_t._get_hash_recursive(newparents)) & 0xffffffffffffffff
+        tmphash = (0x12d08d3d4f359807+ Time_t._get_hash_recursive(newparents)+ PointField_t._get_hash_recursive(newparents)) & 0xffffffffffffffff
         tmphash  = (((tmphash<<1)&0xffffffffffffffff) + (tmphash>>63)) & 0xffffffffffffffff
         return tmphash
     _get_hash_recursive = staticmethod(_get_hash_recursive)
